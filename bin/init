@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+cp .env.sample .env
+docker-compose build
+docker-compose run --rm app bash -c "cd / && rails new ./app -d mysql --skip-coffee --skip-turbolinks -T -J --webpack=vue -f -m ./app/config/template.rb"
+docker-compose run --rm app bundle exec spring binstub --all

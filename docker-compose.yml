@@ -1,0 +1,41 @@
+version: '3'
+
+volumes:
+  mysql:
+    driver: local
+  bundle:
+    driver: local
+  node_modules:
+    driver: local
+
+services:
+  db:
+    image: mysql:8
+    volumes:
+      - ./etc/mysql/conf.d:/etc/mysql/conf.d
+      - ./log/mysql:/var/log/mysql
+      - mysql:/var/lib/mysql
+    ports:
+      - "${DB_HOST_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+
+  app: &app
+    build: .
+    command: ["bundle", "exec", "rails", "s",  "-p", "${APP_HOST_PORT}", "-b", "0.0.0.0"]
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+      - node_modules:/app/node_modules
+    ports:
+      - "${APP_HOST_PORT}:3002"
+    depends_on:
+      - db
+
+  webpack:
+    <<: *app
+    command: bin/webpack-dev-server
+    ports:
+      - "3035"
+    depends_on:
+      - app

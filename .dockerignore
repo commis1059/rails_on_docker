@@ -1,0 +1,15 @@
+.bundle
+.git
+.idea
+.rspec
+coverage
+dev
+log
+node_modules
+public/assets/*
+public/packs/*
+public/packs-test/*
+spec
+tmp
+vendor
+yarn-error.log
