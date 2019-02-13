@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
 cp .env.sample .env
+
+echo "If you'd like to edit .env, input y.[yN]"
+read input
+if [ ${input} ] && [ ${input} = 'y' ]; then
+  exit 0
+fi
+
 docker-compose build
 docker-compose run --rm app bash -c "cd / && rails new ./app -d mysql --skip-coffee --skip-turbolinks -T -J --webpack=vue -f -m ./app/config/template.rb"
 docker-compose run --rm app bundle exec spring binstub --all
+docker-compose run --rm app bin/rails db:create
